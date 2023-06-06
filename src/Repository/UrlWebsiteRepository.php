@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\UrlWebsite;
@@ -39,28 +41,15 @@ class UrlWebsiteRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return WebsiteUrl[] Returns an array of WebsiteUrl objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('w.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?WebsiteUrl
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /** @return iterable<UrlWebsite> */
+    public function findUrlsOlderThan(\DateTimeInterface $date): iterable
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.ultimaVisita IS NULL OR u.ultimaVisita <= :data')
+            ->setParameter('data', $date)
+            ->orderBy('u.prioridade', 'DESC')
+            ->getQuery()
+            ->toIterable()
+        ;
+    }
 }

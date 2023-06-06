@@ -6,6 +6,8 @@ namespace App\Entity;
 
 use App\Repository\UrlWebsiteRepository;
 use Doctrine\ORM\Mapping as ORM;
+use League\Uri\Contracts\UriInterface;
+use League\Uri\Uri;
 
 #[ORM\Entity(repositoryClass: UrlWebsiteRepository::class)]
 class UrlWebsite
@@ -26,4 +28,9 @@ class UrlWebsite
 
     #[ORM\Column]
     public ?int $prioridade = null;
+
+    public function toUri(): UriInterface
+    {
+        return Uri::createFromString($this->urlCanonica);
+    }
 }
