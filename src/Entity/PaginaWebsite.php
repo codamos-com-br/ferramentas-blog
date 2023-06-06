@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\PaginaWebsiteRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaginaWebsiteRepository::class)]
@@ -25,6 +26,38 @@ class PaginaWebsite
     #[ORM\Column]
     public ?\DateTimeImmutable $ultimaVisita = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    public ?string $conteudoGzip = null;
+    #[ORM\OneToMany(mappedBy: 'fonte', targetEntity: ArquivoWeb::class, orphanRemoval: true, cascade: ['all'])]
+    public Collection $arquivos;
+
+    public function __construct()
+    {
+        $this->arquivos = new ArrayCollection();
+    }
+
+    public function arquivos(): Collection
+    {
+        return $this->arquivos;
+    }
+
+    public function adicionarArquivo(ArquivoWeb $arquivo): self
+    {
+        if (false === $this->arquivos->contains($arquivo)) {
+            $this->arquivos->add($arquivo);
+            $arquivo->setFonte($this);
+        }
+
+        return $this;
+    }
+
+    public function removerArquivo(ArquivoWeb $arquivo): self
+    {
+        if ($this->arquivos->removeElement($arquivo)) {
+            // set the owning side to null (unless already changed)
+            if ($arquivo->getFonte() === $this) {
+                $arquivo->setFonte(null);
+            }
+        }
+
+        return $this;
+    }
 }
