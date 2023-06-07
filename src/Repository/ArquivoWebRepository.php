@@ -40,4 +40,17 @@ class ArquivoWebRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /** @return iterable<ArquivoWeb> */
+    public function findHeavyFiles(int $thresholdBytes): iterable
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.tamanhoBytes > :tamanho')
+            ->setParameter('tamanho', $thresholdBytes)
+            ->orderBy('a.tamanhoBytes', 'DESC')
+            ->orderBy('a.fonte', 'ASC')
+            ->getQuery()
+            ->toIterable()
+        ;
+    }
 }
