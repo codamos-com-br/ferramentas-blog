@@ -1,0 +1,9 @@
+services:
+    Google\Client:
+        class: Google\Client
+        calls:
+            - [setClientId, ['%env(GOOGLE_CLIENT_ID)%']]
+            - [setClientSecret, ['%env(GOOGLE_CLIENT_SECRET)%']]
+#            - [setAccessToken, ['ya29.a0AWY7Ckn8yP-1jWRyW_tcgyRlWeIzd97tfarlHNfDG2Fv2grJA3InW8VRPCO79dAT7eboAUXtx74KslTYFzhgZq86hwbdFQCkxXj355vktQGKgzeuG-jCJMgzUaxCinni5VDb18deV7q-50zXjMtNrnV5nKoJaCgYKAdgSARASFQG1tDrpMAHHebtoBf8ncDdhjtRkBQ0163']]
+            - [setAccessToken, ['%env(string:GOOGLE_REFRESH_TOKEN)%']]
+            - [setRedirectUri, ['http://localhost']]
